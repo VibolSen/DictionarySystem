@@ -1,5 +1,6 @@
-﻿using ExamTemplate;
+﻿using DictionarySystem;
 using System.Text.Json;
+using System.Xml.Linq;
 
 internal class EnglishScreen
 {
@@ -160,39 +161,16 @@ internal class EnglishScreen
     public void ViewAllEnglishWords()
     {
         Console.Clear();
-        Console.WriteLine("5. View all English Words");
-
-        if (translations.Count == 0)
-        {
-            Console.WriteLine("No words available.");
-            Console.ReadLine();
-            return;
-        }
-
-        // Determine maximum lengths for English and German words
-        int maxEnglishLength = Math.Max(translations.Max(t => t.Value.English.Length), "English".Length);
-        int maxGermanLength = Math.Max(translations.Max(t => t.Value.German.Length), "German".Length);
-
-        // Construct table borders dynamically
-        string topBorder = $"┌─────┬{new string('─', maxEnglishLength)}┬{new string('─', maxGermanLength)}┐";
-        string header = $"│ ID  │ {"English".PadRight(maxEnglishLength)} │ {"German".PadRight(maxGermanLength)} │";
-        string separator = $"├─────┼{new string('─', maxEnglishLength)}┼{new string('─', maxGermanLength)}┤";
-        string bottomBorder = $"└─────┴{new string('─', maxEnglishLength)}┴{new string('─', maxGermanLength)}┘";
-
-        // Print the table with dynamic column widths
-        Console.WriteLine(topBorder);
-        Console.WriteLine(header);
-        Console.WriteLine(separator);
+        Console.WriteLine("{0,-8} {1,-20} {2,-20}", "ID", "English", "German");
+        Console.WriteLine("==============================================");
 
         foreach (var item in translations)
         {
-            Console.WriteLine($"│ {item.Key,-4} │ {item.Value.English,-maxEnglishLength} │ {item.Value.German,-maxGermanLength} │");
+            Console.WriteLine($"{item.Key,-8} {item.Value.English,-20} {item.Value.German,-20}");
         }
 
-        Console.WriteLine(bottomBorder);
         Console.ReadLine();
     }
-
     private void SaveTranslations()
     {
         var json = JsonSerializer.Serialize(translations, new JsonSerializerOptions { WriteIndented = true });
