@@ -161,10 +161,13 @@ internal class GermanScreen
     {
         Console.Clear();
         Console.WriteLine("5. View all German Words");
+        Console.WriteLine("{0,-8} {1,-20} {2,-20}", "ID", "German", "English");
+        Console.WriteLine("==============================================");
+
 
         foreach (var item in translations)
         {
-            Console.WriteLine($"ID: {item.Key}, English Word: {item.Value.English}, German Translation: {item.Value.German}");
+            Console.WriteLine($"{item.Key,-8} {item.Value.German,-20} {item.Value.English,-20}");
         }
         Console.ReadLine();
     }
