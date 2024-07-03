@@ -13,9 +13,14 @@ namespace DictionarySystem
             do
             {
                 Console.Clear();
+                Console.WriteLine();
+                Console.WriteLine("DICTIONARY");
+                Console.WriteLine("----------");
+                Console.WriteLine();
                 Console.WriteLine("1.English - German");
                 Console.WriteLine("2.German - English");
                 Console.WriteLine("0.Exit Application");
+                Console.WriteLine();
                 Console.Write("Enter your choice: ");
                 string? choice = Console.ReadLine();
                 if (!int.TryParse(choice, out enteredNumber))

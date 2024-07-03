@@ -8,22 +8,23 @@ internal class GermanScreen
     private Dictionary<int, Translation> translations = new Dictionary<int, Translation>();
     private const string filePath = "translations.txt";
 
-    public GermanScreen()
-    {
-        LoadTranslations();
-    }
-
     public void DisplayMenu()
     {
         while (true)
         {
             Console.Clear();
+            Console.WriteLine();
+            Console.WriteLine("German to English");
+            Console.WriteLine("==============================================");
+            Console.WriteLine();
             Console.WriteLine("1. Add German Word");
             Console.WriteLine("2. Replace a Word");
             Console.WriteLine("3. Delete a Word");
             Console.WriteLine("4. Search for translation of a word");
             Console.WriteLine("5. View all German Words");
+            Console.WriteLine("6. Load all data from file");
             Console.WriteLine("0. Back to Main Menu");
+            Console.WriteLine();
             Console.Write("Enter your choice: ");
             string choice = Console.ReadLine();
 
@@ -52,6 +53,9 @@ internal class GermanScreen
                 case 5:
                     ViewAllGermanWords();
                     break;
+                    case 6:
+                    LoadTranslations();
+                    break;
                 default:
                     Console.WriteLine("Invalid choice. Please try again.");
                     break;
@@ -62,7 +66,10 @@ internal class GermanScreen
     public void AddGermanWord()
     {
         Console.Clear();
+        Console.WriteLine();
         Console.WriteLine("1. Add German Word");
+        Console.WriteLine("==============================================");
+        Console.WriteLine();
         Console.Write("Enter German Word: ");
         string germanWord = Console.ReadLine();
         Console.Write("Enter English Word: ");
@@ -85,24 +92,46 @@ internal class GermanScreen
     public void ReplaceWord()
     {
         Console.Clear();
+        Console.WriteLine();
         Console.WriteLine("2. Replace a Word");
+        Console.WriteLine("==============================================");
+        Console.WriteLine();
         Console.Write("Enter the ID of the word to replace: ");
+        Console.WriteLine();
         string idInput = Console.ReadLine();
 
         if (int.TryParse(idInput, out int id) && translations.ContainsKey(id))
         {
-            Console.Write("Enter new German Word: ");
-            string newGermanWord = Console.ReadLine();
+            var currentTranslation = translations[id];
+            Console.WriteLine($"ID       : {id}");
+            Console.WriteLine($"English  : {currentTranslation.English}");
+            Console.WriteLine($"German   : {currentTranslation.German}");
+            Console.WriteLine();
 
-            if (!string.IsNullOrEmpty(newGermanWord))
+            Console.Write("Are you sure you want to replace this word? (Y/N): ");
+            string? confirmation = Console.ReadLine();
+
+            if (confirmation != null && confirmation.ToUpper() == "Y")
             {
-                translations[id] = new Translation(translations[id].English, newGermanWord);
-                SaveTranslations();
-                Console.WriteLine("Word replaced successfully!");
+                Console.Write("Enter new German Word: ");
+                string? newGermanWord = Console.ReadLine();
+                Console.Write("Enter new English Translation: ");
+                string? newEnglishWord = Console.ReadLine();
+
+                if (!string.IsNullOrEmpty(newGermanWord) && !string.IsNullOrEmpty(newEnglishWord))
+                {
+                    translations[id] = new Translation(newGermanWord, newEnglishWord);
+                    SaveTranslations();
+                    Console.WriteLine("Word replaced successfully!");
+                }
+                else
+                {
+                    Console.WriteLine("Input cannot be empty.");
+                }
             }
             else
             {
-                Console.WriteLine("Input cannot be empty.");
+                Console.WriteLine("Operation canceled.");
             }
         }
         else
@@ -115,28 +144,59 @@ internal class GermanScreen
     public void DeleteWord()
     {
         Console.Clear();
+        Console.WriteLine();
         Console.WriteLine("3. Delete a Word");
+        Console.WriteLine("==============================================");
+        Console.WriteLine();
         Console.Write("Enter the ID of the word to delete: ");
         string idInput = Console.ReadLine();
 
         if (int.TryParse(idInput, out int id) && translations.ContainsKey(id))
         {
-            translations.Remove(id);
-            SaveTranslations();
-            Console.WriteLine("Word deleted successfully!");
+            var wordToDelete = translations[id];
+
+            Console.WriteLine();
+            Console.WriteLine($"ID: {id}");
+            Console.WriteLine($"English: {wordToDelete.English}");
+            Console.WriteLine($"German: {wordToDelete.German}");
+            Console.WriteLine();
+
+            Console.WriteLine($"Are you sure you want to delete the word with ID {id}? (Y/N)");
+            Console.WriteLine();
+            string choice = Console.ReadLine()?.Trim().ToUpper();
+
+            if (choice == "Y")
+            {
+                translations.Remove(id);
+                SaveTranslations();
+                Console.WriteLine("Word deleted successfully!");
+            }
+            else if (choice == "N")
+            {
+                Console.WriteLine("Deletion canceled.");
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice. Deletion canceled.");
+            }
         }
         else
         {
             Console.WriteLine("Invalid ID or word not found.");
         }
+
         Console.ReadLine();
     }
 
     public void SearchGermanTranslation()
     {
         Console.Clear();
+        Console.WriteLine();
         Console.WriteLine("4. Search for translation of a word");
+        Console.WriteLine("==============================================");
+        Console.WriteLine();
         Console.Write("Enter German Word to search: ");
+        Console.WriteLine();
         string searchWord = Console.ReadLine();
 
         bool found = false;
@@ -160,7 +220,9 @@ internal class GermanScreen
     public void ViewAllGermanWords()
     {
         Console.Clear();
+        Console.WriteLine();
         Console.WriteLine("5. View all German Words");
+        Console.WriteLine();
         Console.WriteLine("{0,-8} {1,-20} {2,-20}", "ID", "German", "English");
         Console.WriteLine("==============================================");
 
@@ -187,18 +249,45 @@ internal class GermanScreen
 
     private void LoadTranslations()
     {
-        try
+        Console.Clear();
+        Console.WriteLine();
+        if (File.Exists(filePath))
         {
-            if (File.Exists(filePath))
+            var json = File.ReadAllText(filePath);
+            translations = JsonSerializer.Deserialize<Dictionary<int, Translation>>(json) ?? new Dictionary<int, Translation>();
+
+            Console.WriteLine("6. Load All Data From File");
+            Console.WriteLine("==============================================");
+            Console.WriteLine();
+            Console.WriteLine("Translations loaded successfully. Here are the current translations:");
+            Console.WriteLine();
+
+            // Define column widths
+            int idColumnWidth = 5;
+            int germanColumnWidth = 20;
+            int englishColumnWidth = 20;
+
+            // Print table headers
+            Console.WriteLine($"{"ID".PadRight(idColumnWidth)} {"German".PadRight(germanColumnWidth)} {"English".PadRight(englishColumnWidth)}");
+            Console.WriteLine(new string('-', idColumnWidth + germanColumnWidth + englishColumnWidth + 2));
+
+            // Print each translation in a formatted manner
+            foreach (var translation in translations)
             {
-                var json = File.ReadAllText(filePath);
-                translations = JsonSerializer.Deserialize<Dictionary<int, Translation>>(json) ?? new Dictionary<int, Translation>();
+                string id = translation.Key.ToString().PadRight(idColumnWidth);
+                string germanWord = translation.Value.German.PadRight(germanColumnWidth);
+                string englishWord = translation.Value.English.PadRight(englishColumnWidth);
+                Console.WriteLine($"{id} {germanWord} {englishWord}");
             }
+            Console.WriteLine();
+            Console.Write("Press any key to back to menu. . . . ");
         }
-        catch (Exception ex)
+        else
         {
-            Console.WriteLine($"Error loading translations: {ex.Message}");
+            translations = new Dictionary<int, Translation>();
+            Console.WriteLine("No translations file found. Starting with an empty dictionary.");
         }
+        Console.ReadLine(); // To pause the screen and let the user read the output
     }
 }
 
