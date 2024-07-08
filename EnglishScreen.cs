@@ -4,11 +4,12 @@ using System.Xml.Linq;
 
 internal class EnglishScreen
 {
-    private Dictionary<int, Translation> translations = new Dictionary<int, Translation>();
+    private Dictionary<int, Translation> translations;
     private const string filePath = "translations.txt";
 
-    public void DisplayMenu()
+    public void DisplayMenu(Dictionary<int, Translation> translationDictionary)
     {
+        translations = translationDictionary;
         while (true)
         {
             Console.Clear();
@@ -203,7 +204,7 @@ internal class EnglishScreen
         {
             if (translation.English.Equals(searchWord, StringComparison.OrdinalIgnoreCase))
             {
-                Console.WriteLine($"Translation: {translation.German}"); 
+                Console.WriteLine($"Translation: {translation.German}");
                 found = true;
                 break;
             }

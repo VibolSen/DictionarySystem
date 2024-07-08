@@ -5,8 +5,11 @@ using System.Text.Json;
 
 namespace DictionarySystem
 {
+
     internal class Program
     {
+        static private Dictionary<int, Translation> translations = new Dictionary<int, Translation>();
+
         static void Main(string[] args)
         {
             int enteredNumber;
@@ -35,11 +38,11 @@ namespace DictionarySystem
                         return;
                     case 1:
                         EnglishScreen englishScreen = new();
-                        englishScreen.DisplayMenu();
+                        englishScreen.DisplayMenu(translations);
                         break;
                     case 2:
                         GermanScreen germanScreen = new();
-                        germanScreen.DisplayMenu();
+                        germanScreen.DisplayMenu(translations);
                         break;
                     default:
                         Console.WriteLine("Invalid choice. Please try again.");

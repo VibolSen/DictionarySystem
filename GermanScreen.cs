@@ -1,15 +1,17 @@
-﻿using System;
+﻿using DictionarySystem;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
 internal class GermanScreen
 {
-    private Dictionary<int, Translation> translations = new Dictionary<int, Translation>();
+    private Dictionary<int, Translation> translations;
     private const string filePath = "translations.txt";
 
-    public void DisplayMenu()
+    public void DisplayMenu(Dictionary<int, Translation> translationDictionary)
     {
+        translations = translationDictionary;
         while (true)
         {
             Console.Clear();
@@ -53,7 +55,7 @@ internal class GermanScreen
                 case 5:
                     ViewAllGermanWords();
                     break;
-                    case 6:
+                case 6:
                     LoadTranslations();
                     break;
                 default:
@@ -288,17 +290,5 @@ internal class GermanScreen
             Console.WriteLine("No translations file found. Starting with an empty dictionary.");
         }
         Console.ReadLine(); // To pause the screen and let the user read the output
-    }
-}
-
-public class Translation
-{
-    public string English { get; set; }
-    public string German { get; set; }
-
-    public Translation(string english, string german)
-    {
-        English = english;
-        German = german;
     }
 }
