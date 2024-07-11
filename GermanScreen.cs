@@ -16,18 +16,18 @@ internal class GermanScreen
         {
             Console.Clear();
             Console.WriteLine();
-            Console.WriteLine("German to English");
-            Console.WriteLine("==============================================");
+            Console.WriteLine("========= German to English ========");
+            Console.WriteLine("====================================");
             Console.WriteLine();
             Console.WriteLine("1. Add German Word");
             Console.WriteLine("2. Replace a Word");
             Console.WriteLine("3. Delete a Word");
-            Console.WriteLine("4. Search for translation of a word");
+            Console.WriteLine("4. Search for Translation of a Word");
             Console.WriteLine("5. View all German Words");
             Console.WriteLine("6. Load all data from file");
             Console.WriteLine("0. Back to Main Menu");
             Console.WriteLine();
-            Console.Write("Enter your choice: ");
+            Console.Write("Enter your choice(0-6): ");
             string choice = Console.ReadLine();
 
             if (!int.TryParse(choice, out int enteredNumber))
@@ -69,8 +69,8 @@ internal class GermanScreen
     {
         Console.Clear();
         Console.WriteLine();
-        Console.WriteLine("1. Add German Word");
-        Console.WriteLine("==============================================");
+        Console.WriteLine("-------- 1. Add German Word --------");
+        Console.WriteLine("====================================");
         Console.WriteLine();
         Console.Write("Enter German Word: ");
         string germanWord = Console.ReadLine();
@@ -88,6 +88,8 @@ internal class GermanScreen
         {
             Console.WriteLine("Input cannot be empty.");
         }
+        Console.WriteLine();
+        Console.Write("Press any key to back to menu. . . . ");
         Console.ReadLine();
     }
 
@@ -95,11 +97,10 @@ internal class GermanScreen
     {
         Console.Clear();
         Console.WriteLine();
-        Console.WriteLine("2. Replace a Word");
-        Console.WriteLine("==============================================");
+        Console.WriteLine("-------- 2. Replace a Word --------");
+        Console.WriteLine("===================================");
         Console.WriteLine();
         Console.Write("Enter the ID of the word to replace: ");
-        Console.WriteLine();
         string idInput = Console.ReadLine();
 
         if (int.TryParse(idInput, out int id) && translations.ContainsKey(id))
@@ -122,7 +123,7 @@ internal class GermanScreen
 
                 if (!string.IsNullOrEmpty(newGermanWord) && !string.IsNullOrEmpty(newEnglishWord))
                 {
-                    translations[id] = new Translation(newGermanWord, newEnglishWord);
+                    translations[id] = new Translation(newEnglishWord, newGermanWord);
                     SaveTranslations();
                     Console.WriteLine("Word replaced successfully!");
                 }
@@ -140,6 +141,8 @@ internal class GermanScreen
         {
             Console.WriteLine("Invalid ID or word not found.");
         }
+        Console.WriteLine();
+        Console.Write("Press any key to back to menu. . . . ");
         Console.ReadLine();
     }
 
@@ -147,8 +150,8 @@ internal class GermanScreen
     {
         Console.Clear();
         Console.WriteLine();
-        Console.WriteLine("3. Delete a Word");
-        Console.WriteLine("==============================================");
+        Console.WriteLine("-------- 3. Delete a Word --------");
+        Console.WriteLine("==================================");
         Console.WriteLine();
         Console.Write("Enter the ID of the word to delete: ");
         string idInput = Console.ReadLine();
@@ -157,14 +160,12 @@ internal class GermanScreen
         {
             var wordToDelete = translations[id];
 
-            Console.WriteLine();
             Console.WriteLine($"ID: {id}");
             Console.WriteLine($"English: {wordToDelete.English}");
             Console.WriteLine($"German: {wordToDelete.German}");
             Console.WriteLine();
 
-            Console.WriteLine($"Are you sure you want to delete the word with ID {id}? (Y/N)");
-            Console.WriteLine();
+            Console.Write($"Are you sure you want to delete the word with ID {id}? (Y/N)");
             string choice = Console.ReadLine()?.Trim().ToUpper();
 
             if (choice == "Y")
@@ -186,7 +187,8 @@ internal class GermanScreen
         {
             Console.WriteLine("Invalid ID or word not found.");
         }
-
+        Console.WriteLine();
+        Console.Write("Press any key to back to menu. . . . ");
         Console.ReadLine();
     }
 
@@ -194,8 +196,8 @@ internal class GermanScreen
     {
         Console.Clear();
         Console.WriteLine();
-        Console.WriteLine("4. Search for translation of a word");
-        Console.WriteLine("==============================================");
+        Console.WriteLine("-------- 4. Search for Translation of a Word --------");
+        Console.WriteLine("=====================================================");
         Console.WriteLine();
         Console.Write("Enter German Word to search: ");
         Console.WriteLine();
@@ -216,6 +218,8 @@ internal class GermanScreen
         {
             Console.WriteLine("Word not found.");
         }
+        Console.WriteLine();
+        Console.Write("Press any key to back to menu. . . . ");
         Console.ReadLine();
     }
 
@@ -223,7 +227,7 @@ internal class GermanScreen
     {
         Console.Clear();
         Console.WriteLine();
-        Console.WriteLine("5. View all German Words");
+        Console.WriteLine("---------- 5. View all German Words ----------");
         Console.WriteLine();
         Console.WriteLine("{0,-8} {1,-20} {2,-20}", "ID", "German", "English");
         Console.WriteLine("==============================================");
@@ -233,6 +237,8 @@ internal class GermanScreen
         {
             Console.WriteLine($"{item.Key,-8} {item.Value.German,-20} {item.Value.English,-20}");
         }
+        Console.WriteLine();
+        Console.Write("Press any key to back to menu. . . . ");
         Console.ReadLine();
     }
 
@@ -258,8 +264,8 @@ internal class GermanScreen
             var json = File.ReadAllText(filePath);
             translations = JsonSerializer.Deserialize<Dictionary<int, Translation>>(json) ?? new Dictionary<int, Translation>();
 
-            Console.WriteLine("6. Load All Data From File");
-            Console.WriteLine("==============================================");
+            Console.WriteLine("-------- 6. Load All Data From File --------");
+            Console.WriteLine("============================================");
             Console.WriteLine();
             Console.WriteLine("Translations loaded successfully. Here are the current translations:");
             Console.WriteLine();
@@ -281,14 +287,14 @@ internal class GermanScreen
                 string englishWord = translation.Value.English.PadRight(englishColumnWidth);
                 Console.WriteLine($"{id} {germanWord} {englishWord}");
             }
-            Console.WriteLine();
-            Console.Write("Press any key to back to menu. . . . ");
         }
         else
         {
             translations = new Dictionary<int, Translation>();
             Console.WriteLine("No translations file found. Starting with an empty dictionary.");
         }
+        Console.WriteLine();
+        Console.Write("Press any key to back to menu. . . . ");
         Console.ReadLine(); // To pause the screen and let the user read the output
     }
 }
